@@ -49,11 +49,32 @@ DROP TABLE BlogTags;
 CREATE TABLE BlogTags (
 	blogid INT NOT NULL,
     tagid INT NOT NULL,
-    FOREIGN KEY (blogid) REFERENCES Blog(id),
+    FOREIGN KEY (blogid) REFERENCES Blogs(id),
     FOREIGN KEY (tagid) REFERENCES Tags(id),
     PRIMARY KEY (blogid, tagid)
 );
+INSERT INTO BlogTags (blogid, tagid) VALUES
+    (1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (1, 6),
+    (2, 1), (2, 2), (2, 3), (2, 4), (2, 5), (2, 7),
+    (3, 8),
+    (4, 10), (4, 11), (4, 12),
+    (5, 9), (5, 10), (5, 11)
+;
 
-SELECT * FROM Authors;
-SELECT * FROM Blogs;
-SELECT * FROM Tags;
+
+
+delimiter //
+
+	CREATE PROCEDURE spBlogTags
+    (blogid int)
+		BEGIN
+			SELECT 
+				b.blogid as BlogID, t.id as TagID, t.name as Tag 
+			FROM BlogTags b
+			JOIN Tags t on b.tagid = t.id WHERE b.blogid = blogid;
+END//
+
+delimiter ;
+
+-- DROP PROCEDURE spBlogTags;
+-- CALL spBlogTags(4);
