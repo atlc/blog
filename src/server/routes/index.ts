@@ -8,7 +8,7 @@ router.use('/blogs', blogRouter);
 router.use('/authors', authorRouter);
 
 router.get('*', (req, res, next) => {
-    res.json('API Root dawgs, whazzup');
+    res.status(404).json('That is not a valid API endpoint');
 });
 
 
