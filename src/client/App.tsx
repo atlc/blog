@@ -1,27 +1,26 @@
 import * as React from 'react';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import AllBlogs from './views/blogs/AllBlogs';
+import Navbar from './components/nav/Navbar';
+import { Home } from './views/Home';
+
 
 const App = (props: AppProps) => {
-	const [greeting, setGreeting] = React.useState<string>('');
-
-	React.useEffect(() => {
-		(async () => {
-			try {
-				const res = await fetch('/api/hello');
-				let greeting = await res.json();
-				setGreeting("Uh oh, we made a fucky wucky :(");
-			} catch (error) {
-				console.log(error);
-			}
-		})();
-	}, []);
 
 	return (
-		<div className="min-vh-100 d-flex justify-content-center align-items-center bg-primary">
-			<h1 className="display-1">{greeting}</h1>
-		</div>
+		<BrowserRouter>
+			<Navbar />
+			<div className="container mt-5 pt-3">
+				<Switch>
+					<Route exact path="/" component={Home} />
+					<Route exact path="/blogs" component={AllBlogs} />
+					<Route path="*" />
+				</Switch>
+			</div>
+		</BrowserRouter>
 	);
 };
 
-interface AppProps {}
+interface AppProps { }
 
 export default App;

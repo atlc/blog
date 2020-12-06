@@ -63,15 +63,14 @@ INSERT INTO BlogTags (blogid, tagid) VALUES
 
 
 
-delimiter //
+delimiter $$
 	CREATE PROCEDURE spBlogTags(blogid int)
 		BEGIN
 			SELECT 
 				b.blogid as BlogID, t.id as TagID, t.name as Tag 
 			FROM BlogTags b
 			JOIN Tags t on b.tagid = t.id WHERE b.blogid = blogid;
-END//
-
+END $$
 delimiter ;
 
 -- DROP PROCEDURE spBlogTags;
