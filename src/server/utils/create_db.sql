@@ -64,9 +64,7 @@ INSERT INTO BlogTags (blogid, tagid) VALUES
 
 
 delimiter //
-
-	CREATE PROCEDURE spBlogTags
-    (blogid int)
+	CREATE PROCEDURE spBlogTags(blogid int)
 		BEGIN
 			SELECT 
 				b.blogid as BlogID, t.id as TagID, t.name as Tag 

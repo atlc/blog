@@ -52,7 +52,7 @@ router.delete('/:id', async (req, res, next) => {
         console.log(e);
         res.status(500).send('A server error has occurred. Please check the server logs for more info.');
     }
-})
+});
 
 
 export default router;
