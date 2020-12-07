@@ -2,10 +2,10 @@ import DB from '../db';
 import * as express from 'express';
 const router = express.Router();
 
-router.get('/:id', async (req, res, next) => {
+router.get('/:id?', async (req, res, next) => {
     try {
         const id = req.params?.id;
-        const blogtags = await DB.BlogTags.get.from_blog(id);
+        const blogtags = (!!id) ? await DB.BlogTags.get.from_blog(id) : await DB.BlogTags.get.all();
         res.status(200).send(blogtags);
     } catch (e) {
         console.log(e);

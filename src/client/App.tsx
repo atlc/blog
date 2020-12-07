@@ -1,8 +1,11 @@
 import * as React from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import AllBlogs from './views/blogs/AllBlogs';
 import Navbar from './components/nav/Navbar';
 import { Home } from './views/Home';
+import AllBlogs from './views/blogs/AllBlogs';
+import SingleBlog from './views/blogs/SingleBlog';
+
+
 
 
 const App = (props: AppProps) => {
@@ -14,6 +17,7 @@ const App = (props: AppProps) => {
 				<Switch>
 					<Route exact path="/" component={Home} />
 					<Route exact path="/blogs" component={AllBlogs} />
+					<Route path="/blogs/:id" component={SingleBlog} />
 					<Route path="*" />
 				</Switch>
 			</div>
