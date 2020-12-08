@@ -10,9 +10,11 @@ const SingleBlog = (props: SingleBlogProps) => {
     useEffect(() => {
         (async () => {
             try {
-                const res = await fetch(`/api/blogs/${id}`);
-                let blog = await res.json();
-                updateBlog(blog[0]);
+                // const res = await fetch(`/api/blogs/${id}`);
+                // Using this endpoint since it fetches blog + author info in stored procedure
+                const res = await fetch(`/api/blogs/${id}/author`);
+                let blogs = await res.json();
+                updateBlog(blogs[0][0]);
             } catch (error) {
                 console.log(error);
             }
@@ -21,7 +23,7 @@ const SingleBlog = (props: SingleBlogProps) => {
 
     return (
         <div className="row">
-            <SingleBlogCard key={uuidv4()} {...blog} />
+            {blog ? <SingleBlogCard key={uuidv4()} {...blog} /> : <h2>Loading SingleBlog...</h2>}
         </div>
     );
 };

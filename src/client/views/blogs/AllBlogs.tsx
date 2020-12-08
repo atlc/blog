@@ -9,8 +9,10 @@ const AllBlogs = (props: AllBlogsProps) => {
     useEffect(() => {
         (async () => {
             try {
-                const res = await fetch('/api/blogs');
+                const res = await fetch('/api/blogs/with_authors');
                 let blogs = await res.json();
+                // Returning just the data I want without the SQL response since this calls a stored procedure
+                blogs = blogs[0];
                 updateBlogs(blogs);
             } catch (error) {
                 console.log(error);

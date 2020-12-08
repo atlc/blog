@@ -15,7 +15,7 @@ INSERT INTO Authors (name, email) VALUES
 	('Andrew Cartwright', 'andrew@example.io'),
     ('Prospectin Pete', 'pete@prospectorsonly.com'),
     ("Steve d'Pirate", 'aaarrrgh@sevenseas.org'),
-    ('(The) Carl Weathers', 'cweathers@actorsguild.ca')
+    ('(The) Carl Weathers', 'cweathers_actor@yahoo.com')
 ;
 
 DROP TABLE Blogs;
@@ -29,8 +29,8 @@ CREATE TABLE Blogs (
 	FOREIGN KEY (authorid) REFERENCES Authors(id)
 );
 INSERT INTO Blogs (title, content, authorid) VALUES
-	('My Journey Through Covalence: Coding While Listening to 90s Alt', "Shakedown 1979, cool kids never have the time === On a live wire right up off the street === You and I should meet === June bug skipping like a stone === With the headlights pointed at the dawn === We were sure we'd never see an end to it all === And I don't even care to shake these zipper blues === And we don't know just where our bones will rest === To dust I guess === Forgotten and absorbed into the earth below", 1),
-    ('Yours, Mines, and Ours: Budget Prospecting While Listening to 90s Alt', "In my eyes, indisposed === In disguises no one knows === Hides the face, lies the snake === In the sun, in my disgrace === Boiling heat, summer stench === 'Neath the black the sky looks dead === Call my name through the cream === And I'll hear you scream again === Black hole sun === Won't you come === And wash away the rain === Black hole sun === Won't you come === Won't you come (won't you come)", 2),
+	('My Journey Through Covalence: Coding While Listening to 90s Alt', "Shakedown 1979, cool kids never have the time \n On a live wire right up off the street \n You and I should meet \n June bug skipping like a stone \n With the headlights pointed at the dawn \n We were sure we'd never see an end to it all \n And I don't even care to shake these zipper blues \n And we don't know just where our bones will rest \n To dust I guess \n Forgotten and absorbed into the earth below", 1),
+    ('Yours, Mines, and Ours: Budget Prospecting While Listening to 90s Alt', "In my eyes, indisposed \n In disguises no one knows \n Hides the face, lies the snake \n In the sun, in my disgrace \n Boiling heat, summer stench \n 'Neath the black the sky looks dead \n Call my name through the cream \n And I'll hear you scream again \n Black hole sun \n Won't you come \n And wash away the rain \n Black hole sun \n Won't you come \n Won't you come (won't you come)", 2),
     ("A Harrowin' Tale o' th' High Seas!", "Prow scuttle parrel provost Sail ho shrouds spirits boom mizzenmast yardarm. Pinnace holystone mizzenmast quarter crow's nest nipperkin grog yardarm hempen halter furl. Swab barque interloper chantey doubloon starboard grog black jack gangway rutters. Deadlights jack lad schooner scallywag dance the hempen jig carouser broadside cable strike colors. Bring a spring upon her cable holystone blow the man down spanker Shiver me timbers to go on account lookout wherry doubloon chase. Belay yo-ho-ho keelhaul squiffy black spot yardarm spyglass sheet transom heave to.", 3),
     ("Culinary Tips from an Actor's Perspective", "Whoa, whoa, whoa. There's still plenty of meat on that bone. Now you take this home, throw it in a pot, add some broth, a potato. Baby, you've got a stew going...  Let me tell you a little story about acting. I was doing this Showtime movie, Hot Ice with Anne Archer, never once touched my per diem. I'd go to Craft Service, get some raw veggies, bacon, Cup-A-Soup... baby, I got a stew going.", 4),
     ('How Much Do I Charge For Acting Classes?', 'Check this out. $1100 is exactly what I charge for acting classes.', 4) 
@@ -65,7 +65,7 @@ delimiter $$
 	CREATE PROCEDURE spBlogTags(blogid int)
 		BEGIN
 			SELECT 
-				b.blogid as BlogID, t.id as TagID, t.name as Tag 
+				t.name
 			FROM BlogTags b
 			JOIN Tags t on b.tagid = t.id WHERE b.blogid = blogid;
 END $$
@@ -81,7 +81,27 @@ delimiter $$
 END $$
 delimiter ;
 
+delimiter $$
+	CREATE PROCEDURE spBlogAuthors(blogid int)
+		BEGIN
+			IF blogid IS NULL THEN -- Allowing for optional parameter passing to return all or just one
+				SELECT 
+					b.id, b.title, b.content, b.authorid, a.name as AuthorName, a.email as AuthorEmail, b.created_at, b.updated_at
+				FROM Blogs b
+				JOIN Authors a on b.authorid = a.id;
+			ELSE
+				SELECT 
+					b.id, b.title, b.content, b.authorid, a.name as AuthorName, a.email as AuthorEmail, b.created_at, b.updated_at
+				FROM Blogs b
+				JOIN Authors a on b.authorid = a.id
+                WHERE b.id = blogid;
+			END IF;
+END $$
+delimiter ;
+
 DROP PROCEDURE spBlogTags;
 DROP PROCEDURE spAllBlogTags;
+DROP PROCEDURE spBlogAuthors;
 CALL spBlogTags(4);
 CALL spAllBlogTags();
+CALL spBlogAuthors(4);

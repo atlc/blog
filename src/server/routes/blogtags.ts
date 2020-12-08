@@ -8,7 +8,7 @@ router.get('/:id?', async (req, res, next) => {
         const blogtags = (!!id) ? await DB.BlogTags.get.from_blog(id) : await DB.BlogTags.get.all();
         res.status(200).send(blogtags);
     } catch (e) {
-        console.log(e);
+        // console.log(e);
         res.status(500).send('A server error has occurred. Please check the server logs for more info.');
     }
 });

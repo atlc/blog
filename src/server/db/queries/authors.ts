@@ -7,15 +7,6 @@ const create_new = async (attr1: string, attr2: string) => Query('INSERT into Au
 const destroy = async (id: string) => Query('DELETE from Authors where id = ?', [id]);
 const update = async (id: string, content: string) => Query('UPDATE Authors SET ? where ?', [{content}, {id}]);
 
-
-/* 
-    Trying to get good export structure to make it read more like written English, like:
-        - db.Authors.get.all()
-        - db.Authors.get.single(id)
-        - db.Authors.do.create_new(data, blah, blahblah)
-        - db.Authors.do.destroy(id)
-        - db.Authors.do.update(id, updatedData)
-*/
 export default {
     get: {
         all,

@@ -4,6 +4,7 @@ import Navbar from './components/nav/Navbar';
 import { Home } from './views/Home';
 import AllBlogs from './views/blogs/AllBlogs';
 import SingleBlog from './views/blogs/SingleBlog';
+import EditableBlog from './views/blogs/EditableBlog';
 
 
 
@@ -17,6 +18,7 @@ const App = (props: AppProps) => {
 				<Switch>
 					<Route exact path="/" component={Home} />
 					<Route exact path="/blogs" component={AllBlogs} />
+					<Route path="/blogs/:id/edit" component={EditableBlog} />
 					<Route path="/blogs/:id" component={SingleBlog} />
 					<Route path="*" />
 				</Switch>

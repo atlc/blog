@@ -2,6 +2,39 @@ import DB from '../db';
 import * as express from 'express';
 const router = express.Router();
 
+
+
+router.get('/:id?/author', async (req, res, next) => {
+    try {
+        const dto = req;
+        const id = dto.params.id;
+        const blog_with_author = await DB.Blogs.get.my_author(id);
+        res.status(200).json(blog_with_author);
+    } catch (e) {
+        console.log(e);
+    }
+});
+
+router.get('/:id/edit', async (req, res, next) => {
+    try {
+        const dto = req;
+        const id = dto.params.id;
+        const blog = await DB.Blogs.get.single(id);
+        res.status(200).json(blog);
+    } catch (e) {
+        console.log(e);
+    }
+});
+
+router.get('/with_authors', async (req, res, next) => {
+    try {
+        const blogs_authors = await DB.Blogs.get.authors();
+        res.status(200).send(blogs_authors);
+    } catch (e) {
+        console.log(e);
+    }
+})
+
 router.get('/:id?', async (req, res, next) => {
     try {
         const params = req.params;
@@ -31,11 +64,11 @@ router.post('/', async (req, res, next) => {
 
 router.put('/', async (req, res, next) => {
     try {
-        const CURRENT_NUMBER_OF_BLOGS = 5; // Yet again, fake it until Auth time
-        const body = req.body;
-        const content = body.content;
-        const id = (Math.floor(Math.random() * CURRENT_NUMBER_OF_BLOGS) + 1).toString();  // Fake it
-        const blogUpdate = await DB.Blogs.do.update(id, content); // **PUT REQUEST WILL EDIT BLOG AT RANDOM UNTIL I SEND THE ID**
+        const dto = req.body;
+        const id = dto.id;
+        const content = dto.content;
+        console.log(id, content)
+        const blogUpdate = await DB.Blogs.do.update(id, content);
         res.status(200).json(blogUpdate);
     } catch (e) {
         console.log(e);
