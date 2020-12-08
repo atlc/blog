@@ -6,20 +6,24 @@ import AllBlogs from './views/blogs/AllBlogs';
 import SingleBlog from './views/blogs/SingleBlog';
 import EditableBlog from './views/blogs/EditableBlog';
 
-
-
-
 const App = (props: AppProps) => {
-
 	return (
 		<BrowserRouter>
 			<Navbar />
 			<div className="container mt-5 pt-3">
 				<Switch>
-					<Route exact path="/" component={Home} />
-					<Route exact path="/blogs" component={AllBlogs} />
-					<Route path="/blogs/:id/edit" component={EditableBlog} />
-					<Route path="/blogs/:id" component={SingleBlog} />
+					<Route exact path="/">
+						<Home />
+					</Route>
+					<Route exact path="/blogs">
+						<AllBlogs />
+					</Route>
+					<Route path="/blogs/:id/edit">
+						<EditableBlog />
+					</Route>
+					<Route path="/blogs/:id">
+						<SingleBlog />
+					</Route>
 					<Route path="*" />
 				</Switch>
 			</div>

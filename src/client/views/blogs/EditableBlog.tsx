@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { IBlogs } from '../../utils/types';
 import EditableBlogCard from '../../components/blogs/EditableBlogCard';
 import { v4 as uuidv4 } from 'uuid';
 
 const EditableBlog = (props: EditableBlogProps) => {
-    const id = props.match.params.id;
-    const [blog, updateBlog] = useState();
+    const { id } = useParams<EditableBlogProps>();
+    const [blog, updateBlog] = useState<IBlogs>();
 
     useEffect(() => {
         (async () => {
             try {
-                // const res = await fetch(`/api/blogs/${id}`);
-                // Using this endpoint since it fetches blog + author info in stored procedure
-                const res = await fetch(`/api/blogs/${id}/author`);
+                // This endpoint fetches blog + author info in stored procedure
+                const res = await fetch(`/api/blogs/${id}/edit`);
                 let blogs = await res.json();
                 updateBlog(blogs[0][0]);
             } catch (error) {
@@ -29,9 +29,7 @@ const EditableBlog = (props: EditableBlogProps) => {
 };
 
 interface EditableBlogProps {
-    match: any;
-    params: any;
-    id: string;
+    id?: string;
 };
 
 

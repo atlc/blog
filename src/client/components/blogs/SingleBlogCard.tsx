@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 import { IBlogs, IBlogTags } from '../../utils/types';
 import { Link } from 'react-router-dom';
+import TagSelector from '../../components/common/TagSelector';
+
 
 
 const SingleBlogCard = (props: IBlogs) => {
@@ -34,21 +36,18 @@ const SingleBlogCard = (props: IBlogs) => {
 
     return (
         <div className="card text-white bg-light m-3 shadow-lg">
-            <div className="card-header text-dark bg-warning">{title}</div>
+            <div className="card-header text-center text-dark bg-warning">{title}</div>
             <div className="card-body">
                 <p className="text-dark"><em>{content}</em></p>
             </div>
-            <div className="card-footer bg-primary" style={{ opacity: 0.5 }}>
-                <div className="row">
-                    <div className="col-6">
-                        <p>Tags: {blogtags?.map((bt, i, arr) => `#${bt}, `)}</p>
-                        <p>Written by {AuthorName}.</p>
-                        <p><em>Contact:  {AuthorEmail}</em></p>
-                        <p>Last updated {moment(updated_at).startOf('minute').fromNow()}</p>
-                    </div>
-                    <div className="col-6 justify-content-right">
-                        <Link to={`/blogs/${id}/edit`} className="btn btn-secondary">Edit Me</Link>
-                    </div>
+            <div className="card-footer bg-primary">
+                {/* <div className="row ml-2">Tags: {blogtags?.map(bt => `#${bt}, `)}</div> */}
+                <TagSelector disabled={true} id={id} />
+                <div className="row ml-2">Written by {AuthorName}.</div>
+                <div className="row ml-2"><em>Contact:  {AuthorEmail}</em></div>
+                <div className="row ml-2">Last updated {moment(updated_at).startOf('minute').fromNow()}</div>
+                <div className="row ml-2">
+                    <Link to={`/blogs/${id}/edit`} className="btn btn-secondary">Edit Me</Link>
                 </div>
             </div>
         </div>

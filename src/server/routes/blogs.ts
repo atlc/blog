@@ -2,44 +2,22 @@ import DB from '../db';
 import * as express from 'express';
 const router = express.Router();
 
-
-
-router.get('/:id?/author', async (req, res, next) => {
+router.get('/:id?/edit', async (req, res, next) => {
     try {
         const dto = req;
         const id = dto.params.id;
-        const blog_with_author = await DB.Blogs.get.my_author(id);
+        const blog_with_author = await DB.Blogs.get.with_my_author(id);
         res.status(200).json(blog_with_author);
     } catch (e) {
         console.log(e);
     }
 });
 
-router.get('/:id/edit', async (req, res, next) => {
-    try {
-        const dto = req;
-        const id = dto.params.id;
-        const blog = await DB.Blogs.get.single(id);
-        res.status(200).json(blog);
-    } catch (e) {
-        console.log(e);
-    }
-});
-
-router.get('/with_authors', async (req, res, next) => {
-    try {
-        const blogs_authors = await DB.Blogs.get.authors();
-        res.status(200).send(blogs_authors);
-    } catch (e) {
-        console.log(e);
-    }
-})
-
 router.get('/:id?', async (req, res, next) => {
     try {
         const params = req.params;
         const id = params.id;
-        const blogs = (!!id) ? await DB.Blogs.get.single(id) : await DB.Blogs.get.all();
+        const blogs = (!!id) ? await DB.Blogs.get.with_my_author(id) : await DB.Blogs.get.with_authors();
         res.status(200).json(blogs);
     } catch (e) {
         console.log(e);

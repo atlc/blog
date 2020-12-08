@@ -12,7 +12,7 @@ const BlogCard = (props: IBlogs) => {
             <div className="card-body">
                 <p className="text-dark">{content.length > 150 ? <>{content.slice(0, 150)}<strong> ...</strong></> : <>{content}</>}</p>
             </div>
-            <div className="card-footer bg-primary" style={{ opacity: 0.5 }}>
+            <div className="card-footer bg-primary">
                 <p>By {AuthorName}.</p>
                 <p>Last updated {moment(updated_at).startOf('minute').fromNow()}</p>
                 <Link to={`/blogs/${id}`} className="btn btn-secondary">See more</Link>

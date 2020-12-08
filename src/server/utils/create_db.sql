@@ -65,7 +65,7 @@ delimiter $$
 	CREATE PROCEDURE spBlogTags(blogid int)
 		BEGIN
 			SELECT 
-				t.name
+				*
 			FROM BlogTags b
 			JOIN Tags t on b.tagid = t.id WHERE b.blogid = blogid;
 END $$

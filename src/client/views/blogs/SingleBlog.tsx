@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { IBlogs } from '../../utils/types';
+import { useParams } from 'react-router-dom';
 import SingleBlogCard from '../../components/blogs/SingleBlogCard';
 import { v4 as uuidv4 } from 'uuid';
 
-const SingleBlog = (props: SingleBlogProps) => {
-    const id = props.match.params.id;
+const SingleBlog = () => {
+    const { id } = useParams<SingleBlogProps>();
     const [blog, updateBlog] = useState();
 
     useEffect(() => {
         (async () => {
             try {
-                // const res = await fetch(`/api/blogs/${id}`);
-                // Using this endpoint since it fetches blog + author info in stored procedure
-                const res = await fetch(`/api/blogs/${id}/author`);
+                // This endpoint fetches blog + author info in stored procedure
+                const res = await fetch(`/api/blogs/${id}`);
                 let blogs = await res.json();
                 updateBlog(blogs[0][0]);
             } catch (error) {
@@ -29,8 +28,6 @@ const SingleBlog = (props: SingleBlogProps) => {
 };
 
 interface SingleBlogProps {
-    match: any;
-    params: any;
     id: string;
 };
 

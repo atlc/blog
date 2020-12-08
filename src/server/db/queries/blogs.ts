@@ -6,15 +6,15 @@ const single = async (id: string) => Query('SELECT * from Blogs where id = ?', [
 const create_new = async (title: string, content: string, authorid: string) => Query('INSERT into Blogs SET ?', { title, content, authorid });
 const destroy = async (id: string) => Query('DELETE from Blogs where id = ?', [id]);
 const update = async (id: string, content: string) => Query('UPDATE Blogs SET ? where ?', [{content}, {id}]);
-const my_author = async (id: string) => Query('Call spBlogAuthors(?)', [id]);
-const authors = async () => Query('Call spBlogAuthors(null)');
+const with_my_author = async (id: string) => Query('Call spBlogAuthors(?)', [id]);
+const with_authors = async () => Query('Call spBlogAuthors(null)');
 
 export default {
     get: {
         all,
         single,
-        my_author,
-        authors
+        with_my_author,
+        with_authors
     }, 
     do: {
         create_new,

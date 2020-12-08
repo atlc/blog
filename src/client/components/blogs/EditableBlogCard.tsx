@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { IBlogs, IBlogTags } from '../../utils/types';
 import { ToastContainer, toast } from 'react-toastify';
+import TagSelector from '../../components/common/TagSelector';
+
 
 const EditableBlogCard = (props: IBlogs) => {
     const { title, content, id } = props;
     const [blogText, updateBlogText] = useState(content);
-    const [enableButton, setEnableButton] = useState(true);
 
     const handleBlogtextUpdate = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         updateBlogText(e.target.value);
-        setEnableButton(false);
     }
 
     const updateBlog = async () => {
@@ -82,10 +82,13 @@ const EditableBlogCard = (props: IBlogs) => {
                 <div className="card-body">
                     <textarea className="text-dark" value={blogText} rows={10} cols={80} onChange={handleBlogtextUpdate}></textarea>
                 </div>
-                <div className="card-footer bg-primary" style={{ opacity: 0.5 }}>
+                <div className="card-footer bg-primary" >
+                    <div className="row text-dark">
+                        <TagSelector disabled={false} id={id} />
+                    </div>
                     <div className="row">
-                        <button disabled={enableButton} className="btn btn-secondary" onClick={updateBlog}>{enableButton ? "Blog Unchanged" : "Save Changes!"}</button>
-                        <button className="btn btn-warning" onClick={deleteBlog}>Delete Blog?</button>
+                        <button className="btn btn-secondary m-2 shadow" onClick={updateBlog}>Save Changes!</button>
+                        <button className="btn btn-warning m-2 shadow" onClick={deleteBlog}>Delete Blog?</button>
                     </div>
                 </div>
             </div>
