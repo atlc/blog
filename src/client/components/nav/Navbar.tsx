@@ -7,8 +7,9 @@ const Navbar = () => {
         <nav className="navbar mr-auto fixed-top navbar-light bg-primary">
             <div className="row">
                 <Link className="btn bg-secondary text-white mx-2" to="/">Home</Link>
+                <button className="btn bg-secondary text-white mx-2" onClick={()=>location.reload()}>Refresh</button>
                 <Link className="btn bg-secondary text-white mx-2" to="/blogs">All Blogs</Link>
-                <Link className="btn bg-secondary text-white mx-2" to="/authors">All Authors</Link>
+                <Link className="btn bg-secondary text-white mx-2" to="/blogs/create">Create a Blog</Link>
             </div>
         </nav>
     );

@@ -8,8 +8,17 @@ router.get('/:id?', async (req, res, next) => {
         const blogtags = (!!id) ? await DB.BlogTags.get.from_blog(id) : await DB.BlogTags.get.all();
         res.status(200).send(blogtags);
     } catch (e) {
-        // console.log(e);
-        res.status(500).send('A server error has occurred. Please check the server logs for more info.');
+        res.status(500).send(`A server error has occurred. Please check the server logs for more info. ${e}`);
+    }
+});
+
+router.post('/', async (req, res, next) => {
+    try {
+        const blogtags_array = req.body.blogtags_array;
+        const blogtags = await DB.BlogTags.do.create_new(blogtags_array);
+        res.status(200).send(blogtags);
+    } catch (e) {
+        res.status(500).send(`A server error has occurred. Please check the server logs for more info. ${e}`);
     }
 });
 

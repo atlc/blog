@@ -5,6 +5,7 @@ import { Home } from './views/Home';
 import AllBlogs from './views/blogs/AllBlogs';
 import SingleBlog from './views/blogs/SingleBlog';
 import EditableBlog from './views/blogs/EditableBlog';
+import CreateBlog from './views/blogs/CreateBlog';
 
 const App = (props: AppProps) => {
 	return (
@@ -14,6 +15,9 @@ const App = (props: AppProps) => {
 				<Switch>
 					<Route exact path="/">
 						<Home />
+					</Route>
+					<Route exact path="/blogs/create">
+						<CreateBlog />
 					</Route>
 					<Route exact path="/blogs">
 						<AllBlogs />

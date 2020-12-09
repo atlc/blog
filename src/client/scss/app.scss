@@ -4,4 +4,8 @@ $theme-colors: (
     'warning': rgb(255, 171, 0) // Cova Yellow
 );
 
+.select__control {
+    min-width: 200px !important;
+}
+
 @import '../../../node_modules/bootstrap/scss/bootstrap.scss';

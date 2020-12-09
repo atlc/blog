@@ -27,11 +27,10 @@ router.get('/:id?', async (req, res, next) => {
 
 router.post('/', async (req, res, next) => {
     try {
-        const CURRENT_NUMBER_OF_AUTHORS = 4; // Fake it 'til you make it, at least until Auth time
         const body = req.body;
         const title = body.title;
         const content = body.content;
-        const authorid = (Math.floor(Math.random() * CURRENT_NUMBER_OF_AUTHORS) + 1).toString();  // Fake it 'til you make it, at least until Auth time
+        const authorid = body.authorid;  // Fake it 'til you make it, at least until Auth time
         const newBlog = await DB.Blogs.do.create_new(title, content, authorid);
         res.status(200).json(newBlog);
     } catch (e) {

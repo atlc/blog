@@ -5,9 +5,11 @@ import { ITags } from '../../utils/types';
 
 
 const TagSelector = (props: TagSelectorProps) => {
-    const { id, disabled } = props;
-    const [allTags, getAllTags] = useState<IBlogTags[]>();
+    const { id, disabled, onSelectChange } = props;
+    const [allTags, getAllTags] = useState<IBlogTags[]>(null);
     const [myTags, updateMyTags] = useState<IBlogTags[]>();
+    const [selectedTags, updateSelectedTags] = useState(allTags);
+
 
     useEffect(() => {
         (async () => {
@@ -16,25 +18,38 @@ const TagSelector = (props: TagSelectorProps) => {
             let allOptions: any = [];
             tags.map(t => allOptions.push({ value: `${t.id}`, label: `${t.name}` }));
             getAllTags(allOptions);
+            updateSelectedTags(allOptions);
         })()
     }, [])
 
     useEffect(() => {
         (async () => {
             try {
+                if (id === undefined && allTags) {
+                    return updateMyTags(allTags);
+                } else if (id === undefined) {
+                    return
+                }
                 const res = await fetch(`/api/blogtags/${id}`);
                 let tags = await res.json();
                 let parsedTags: ITags[] = tags[0];
                 let myOptions: any = [];
-                //@ts-ignore
                 parsedTags.map(tag => myOptions.push({ value: `${tag.id}`, label: `${tag.name}` }));
+                if (id === undefined && allTags) {
+                    updateMyTags(allTags);
+                }
                 updateMyTags(myOptions);
-                console.log(myOptions);
             } catch (error) {
                 console.log(error);
             }
         })();
-    }, []);
+    }, [allTags]);
+
+    useEffect(() => {
+        onSelectChange(selectedTags);
+    }, [selectedTags])
+
+    const updateSelected = (selectedOptions: any) => updateSelectedTags(selectedOptions);
 
     if (!myTags) return <></>
 
@@ -46,8 +61,10 @@ const TagSelector = (props: TagSelectorProps) => {
                 isDisabled={disabled}
                 name="tags"
                 options={allTags}
+                onChange={updateSelected}
                 className="basic-multi-select"
                 classNamePrefix="select"
+
             />
         </>
     )
@@ -56,6 +73,7 @@ const TagSelector = (props: TagSelectorProps) => {
 interface TagSelectorProps {
     id?: string;
     disabled: boolean;
+    onSelectChange(a: any): void;
 }
 
 export default TagSelector;
