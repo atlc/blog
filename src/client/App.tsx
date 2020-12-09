@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import Navbar from './components/nav/Navbar';
 import { Home } from './views/Home';
 import AllBlogs from './views/blogs/AllBlogs';
@@ -14,7 +14,7 @@ const App = (props: AppProps) => {
 			<div className="container mt-5 pt-3">
 				<Switch>
 					<Route exact path="/">
-						<Home />
+					<Home />
 					</Route>
 					<Route exact path="/blogs/create">
 						<CreateBlog />
@@ -28,7 +28,9 @@ const App = (props: AppProps) => {
 					<Route path="/blogs/:id">
 						<SingleBlog />
 					</Route>
-					<Route path="*" />
+					<Route path="*">
+						<Home />
+					</Route>
 				</Switch>
 			</div>
 		</BrowserRouter>

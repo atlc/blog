@@ -30,11 +30,12 @@ CREATE TABLE Blogs (
 );
 INSERT INTO Blogs (title, content, authorid) VALUES
 	('My Journey Through Covalence: Coding While Listening to 90s Alt', "Shakedown 1979, cool kids never have the time \n On a live wire right up off the street \n You and I should meet \n June bug skipping like a stone \n With the headlights pointed at the dawn \n We were sure we'd never see an end to it all \n And I don't even care to shake these zipper blues \n And we don't know just where our bones will rest \n To dust I guess \n Forgotten and absorbed into the earth below", 1),
-    ('Yours, Mines, and Ours: Budget Prospecting While Listening to 90s Alt', "In my eyes, indisposed \n In disguises no one knows \n Hides the face, lies the snake \n In the sun, in my disgrace \n Boiling heat, summer stench \n 'Neath the black the sky looks dead \n Call my name through the cream \n And I'll hear you scream again \n Black hole sun \n Won't you come \n And wash away the rain \n Black hole sun \n Won't you come \n Won't you come (won't you come)", 2),
+    ('Budget Prospecting & Some Annoying Folk Songs', "She'll be coming round the mountain\nWhen she comes\n\n(Toot, toot!)\n\nShe'll be coming round the mountain\nWhen she comes\n\n(Toot, toot!)\n\nShe'll be coming round the mountain,\nShe'll be coming round the mountain,\nShe'll be coming round the mountain\nWhen she comes\n\n(Toot, toot!)	She'll be driving six white horses\nWhen she comes\n\n(Whoa back!)\n\nShe'll be driving six white horses\nWhen she comes\n\n(Whoa back!)\n\nShe'll be driving six white horses,\nShe'll be driving six white horses,\nShe'll be driving six white horses\nWhen she comes\n\n(Whoa back! Toot, toot!)\n\nOh, we'll all go out to meet her\nWhen she comes\n\n(Hi babe!)\n\nOh, we'll all go out to meet her\nWhen she comes\n\n(Hi babe!)\n\nOh, we'll all go out to meet her,\nWe'll all go out to meet her,\nWe'll all go out to meet her\nWhen she comes\n\n(Hi babe!\nWhoa back! Toot, toot!)\n\nShe'll be wearing red pajamas\nWhen she comes\n\n(Scratch, scratch)\n\nShe'll be wearing red pajamas\nWhen she comes\n\n(Scratch, scratch)\n\nShe'll be wearing red pajamas,\nShe'll be wearing red pajamas,\nShe'll be wearing red pajamas\nWhen she comes\n\n(Scratch, scratch, Hi babe!\nWhoa back! Toot, toot!)\n\nShe will have to sleep with Grandma\nWhen she comes\n\n(She snores!)\n\nShe will have to sleep with Grandma\nWhen she comes\n\n(She snores!)\n\nShe will have to sleep with Grandma,\nShe'll have to sleep with Grandma,\nShe will have to sleep with Grandma\nWhen she comes\n\n(She snores!\nScratch, scratch, Hi babe!\nWhoa back! Toot, toot!)"),
     ("A Harrowin' Tale o' th' High Seas!", "Prow scuttle parrel provost Sail ho shrouds spirits boom mizzenmast yardarm. Pinnace holystone mizzenmast quarter crow's nest nipperkin grog yardarm hempen halter furl. Swab barque interloper chantey doubloon starboard grog black jack gangway rutters. Deadlights jack lad schooner scallywag dance the hempen jig carouser broadside cable strike colors. Bring a spring upon her cable holystone blow the man down spanker Shiver me timbers to go on account lookout wherry doubloon chase. Belay yo-ho-ho keelhaul squiffy black spot yardarm spyglass sheet transom heave to.", 3),
     ("Culinary Tips from an Actor's Perspective", "Whoa, whoa, whoa. There's still plenty of meat on that bone. Now you take this home, throw it in a pot, add some broth, a potato. Baby, you've got a stew going...  Let me tell you a little story about acting. I was doing this Showtime movie, Hot Ice with Anne Archer, never once touched my per diem. I'd go to Craft Service, get some raw veggies, bacon, Cup-A-Soup... baby, I got a stew going.", 4),
     ('How Much Do I Charge For Acting Classes?', 'Check this out. $1100 is exactly what I charge for acting classes.', 4) 
 ;
+select * from Blogs where ID = 1;
 
 DROP TABLE Tags;
 CREATE TABLE Tags (
@@ -60,10 +61,8 @@ INSERT INTO BlogTags (blogid, tagid) VALUES
     (4, 10), (4, 11), (4, 12),
     (5, 9), (5, 10), (5, 11)
 ;
-
-select * from BlogTags where blogid = 1;
-UPDATE BlogTags SET tagid = [('1'), ('4'), ('5')] where blogid = '1';
-
+SELECT * FROM BlogTags where blogid = 1;
+	
 delimiter $$
 	CREATE PROCEDURE spBlogTags(blogid int)
 		BEGIN
@@ -87,7 +86,7 @@ delimiter ;
 delimiter $$
 	CREATE PROCEDURE spBlogAuthors(blogid int)
 		BEGIN
-			IF blogid IS NULL THEN -- Allowing for optional parameter passing to return all or just one
+			IF blogid IS NULL THEN -- Allowing for """optional""" parameter passing to return all or just one
 				SELECT 
 					b.id, b.title, b.content, b.authorid, a.name as AuthorName, a.email as AuthorEmail, b.created_at, b.updated_at
 				FROM Blogs b

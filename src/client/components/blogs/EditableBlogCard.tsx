@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { IBlogs, IBlogTags } from '../../utils/types';
+import React, { useState } from 'react';
+import { IBlogs } from '../../utils/types';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/scss/main.scss';
 import TagSelector from '../../components/common/TagSelector';
-
 
 const EditableBlogCard = (props: IBlogs) => {
     const { title, content, id } = props;
@@ -12,9 +11,7 @@ const EditableBlogCard = (props: IBlogs) => {
 
     const handleBlogtextUpdate = (e: React.ChangeEvent<HTMLTextAreaElement>) => updateBlogText(e.target.value);
     const handleSelectedTagsUpdate = (tagsFromChild: any) => updateBlogTags(tagsFromChild);
-
     const createBulkFriendlyBlogTagsSQL = (blogID: string) => blogTags.map((t: any) => t.value).map((tagid: string) => [`${blogID}`, tagid]);
-
 
     const updateBlog = async () => {
         const blogsOptions = {
@@ -25,9 +22,15 @@ const EditableBlogCard = (props: IBlogs) => {
                 content: blogText
             })
         };
-        const res = await fetch('/api/blogs', blogsOptions);
-        const put_results = await res.status;
-        notify(put_results, "Blog was", "updated");
+
+        fetch('/api/blogs', blogsOptions)
+            .then(res => res.status)
+            .then(put_results => {
+                notify(put_results, "Blog was", "updated");
+                setTimeout(() => {
+                    window.history.go(-2);
+                }, 3000)
+            })
 
 
         // Running what should be a PUT as a POST - MySQL will reinsert everything into that table,
@@ -42,29 +45,34 @@ const EditableBlogCard = (props: IBlogs) => {
             })
         };
         const bt = await fetch(`/api/blogtags/update/${id}`, blogTagsOptions);
-        const btson = await bt.json();
-        console.log(btson);
-        
-        // const blogTagsPutStatus = bt.status;
-        // notify(blogTagsPutStatus, "BlogTags were", "updated")
+        // const btson = await bt.json();
+        // console.log(btson);
     }
 
-    const deleteBlog = async () => {
+    const deleteBlog = () => {
         const reqOptions = {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' },
         };
 
-        let res = await fetch(`/api/blogs/${id}`, reqOptions);
-        let delete_results = await res.status;
-        notify(delete_results, "Blog was", "deleted")
+        // Synchronous-asynchronous code to deal with database deletions. Ugh 
+        fetch(`/api/blogtags/${id}`, reqOptions)
+            .then(() => {
+                fetch(`/api/blogs/${id}`, reqOptions)
+                    .then(blogRes => {
+                        notify(blogRes.status, "Blog was", "deleted");
+                        setTimeout(() => {
+                            window.history.go(-2);
+                        }, 3000)
+                    })
+            })
     }
 
     const notify = (stat: number, item: string, requestVerb: string) => {
         if (stat === 200) {
             toast.success(`😎 ${item} ${requestVerb}!`, {
                 position: toast.POSITION.TOP_RIGHT,
-                autoClose: 5000,
+                autoClose: 3000,
                 hideProgressBar: false,
                 closeOnClick: true,
                 pauseOnHover: true,
@@ -74,7 +82,7 @@ const EditableBlogCard = (props: IBlogs) => {
         } else {
             toast.error(`😞 ${item} not ${requestVerb}, please check server logs for further details.`, {
                 position: toast.POSITION.TOP_RIGHT,
-                autoClose: 5000,
+                autoClose: 3000,
                 hideProgressBar: false,
                 closeOnClick: true,
                 pauseOnHover: true,
@@ -103,15 +111,13 @@ const EditableBlogCard = (props: IBlogs) => {
                     <div className="row text-dark">
                         <TagSelector disabled={false} id={id} onSelectChange={handleSelectedTagsUpdate} />
                     </div>
-                    <div className="row">
-                        <button className="btn btn-secondary m-2 shadow" onClick={updateBlog}>Save Changes!</button>
-                        <button className="btn btn-warning m-2 shadow" onClick={deleteBlog}>Delete Blog?</button>
-                    </div>
+                    <button className="btn btn-secondary m-2 shadow" onClick={updateBlog}>Save Changes!</button>
+                    <button className="btn btn-warning m-2 shadow" onClick={deleteBlog}>Delete Blog?</button>
                 </div>
             </div>
             <ToastContainer
                 position="top-right"
-                autoClose={5000}
+                autoClose={3000}
                 hideProgressBar={false}
                 newestOnTop={false}
                 closeOnClick

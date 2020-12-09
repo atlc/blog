@@ -2,10 +2,6 @@ import DB from '../db';
 import e, * as express from 'express';
 const router = express.Router();
 
-
-
-
-
 router.get('/:id?', async (req, res, next) => {
     try {
         const id = req.params?.id;
@@ -42,6 +38,16 @@ router.post('/update/:id?', async (req, res, next) => {
         } else {
             res.status(500).send(`A server error has occurred. Please check the server logs for more info. ${e}`);
         }
+    } catch (e) {
+        res.status(500).send(`A server error has occurred. Please check the server logs for more info. ${e}`);
+    }
+});
+
+router.delete('/:id?', async (req, res, next) => {
+    try {
+        const id = req.params?.id;
+        const del_blogtags_at = await DB.BlogTags.do.destroy(id);
+        res.status(200).send(del_blogtags_at);
     } catch (e) {
         res.status(500).send(`A server error has occurred. Please check the server logs for more info. ${e}`);
     }
