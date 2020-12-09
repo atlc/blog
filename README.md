@@ -1,1 +1,1 @@
-### Boilerplate Bookstore Blog
+### "This is gonna be the next Facebook, I swear!" Blog
