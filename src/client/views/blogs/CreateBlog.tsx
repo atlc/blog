@@ -28,14 +28,10 @@ const CreateBlog = () => {
                 content: blogText
             })
         };
-
-        let res = await fetch('/api/blogs', blogsOptions);
-        let blogPost = await res.json()
-        console.log('blogPost:\t', blogPost);
-        let blogPostStatus = res.status;
-        console.log('statusBP:', blogPostStatus)
-
-        let blogID = blogPost.insertId;
+        const res = await fetch('/api/blogs', blogsOptions);
+        const blogPost = await res.json()
+        const blogID = blogPost.insertId;
+        const blogPostStatus = res.status;
 
         const blogTagsOptions = {
             method: 'POST',
@@ -44,11 +40,8 @@ const CreateBlog = () => {
                 blogtags_array: createBulkFriendlyBlogTagsSQL(blogID)
             })
         };
-
-        let bt = await fetch('/api/blogtags', blogTagsOptions);
-        let blogTagsPost = await bt.json();
-        let blogTagsPostStatus = bt.status;
-        console.log('blogTagsPostStatus:', blogTagsPostStatus)
+        const bt = await fetch('/api/blogtags/update', blogTagsOptions);
+        const blogTagsPostStatus = bt.status;
 
         notify(blogPostStatus, blogTagsPostStatus);
     }

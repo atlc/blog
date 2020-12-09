@@ -9,6 +9,10 @@ import TagSelector from '../../components/common/TagSelector';
 const SingleBlogCard = (props: IBlogs) => {
     const { title, content, updated_at, id, AuthorName, AuthorEmail } = props;
     const [blogtags, updateMyTags] = useState([]);
+    
+    // TagSelector component requires a change handler prop, but since these are read-only
+    //  until they're on the edit route, then I don't need to bother with updating state
+    const handleSelectedTagsUpdate: any = (tagsFromChild: any) => '';
 
     useEffect(() => {
         (async () => {
@@ -40,9 +44,8 @@ const SingleBlogCard = (props: IBlogs) => {
             <div className="card-body">
                 <p className="text-dark"><em>{content}</em></p>
             </div>
-            <div className="card-footer bg-primary">
-                {/* <div className="row ml-2">Tags: {blogtags?.map(bt => `#${bt}, `)}</div> */}
-                <TagSelector disabled={true} id={id} />
+            <div className="card-footer bg-primary">                
+                <TagSelector disabled={true} id={id} onSelectChange={handleSelectedTagsUpdate} />
                 <div className="row ml-2">Written by {AuthorName}.</div>
                 <div className="row ml-2"><em>Contact:  {AuthorEmail}</em></div>
                 <div className="row ml-2">Last updated {moment(updated_at).startOf('minute').fromNow()}</div>

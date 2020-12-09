@@ -61,6 +61,9 @@ INSERT INTO BlogTags (blogid, tagid) VALUES
     (5, 9), (5, 10), (5, 11)
 ;
 
+select * from BlogTags where blogid = 1;
+UPDATE BlogTags SET tagid = [('1'), ('4'), ('5')] where blogid = '1';
+
 delimiter $$
 	CREATE PROCEDURE spBlogTags(blogid int)
 		BEGIN

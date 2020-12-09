@@ -18,7 +18,6 @@ const TagSelector = (props: TagSelectorProps) => {
             let allOptions: any = [];
             tags.map(t => allOptions.push({ value: `${t.id}`, label: `${t.name}` }));
             getAllTags(allOptions);
-            updateSelectedTags(allOptions);
         })()
     }, [])
 
@@ -39,6 +38,7 @@ const TagSelector = (props: TagSelectorProps) => {
                     updateMyTags(allTags);
                 }
                 updateMyTags(myOptions);
+                updateSelectedTags(myOptions);
             } catch (error) {
                 console.log(error);
             }
@@ -64,7 +64,6 @@ const TagSelector = (props: TagSelectorProps) => {
                 onChange={updateSelected}
                 className="basic-multi-select"
                 classNamePrefix="select"
-
             />
         </>
     )
