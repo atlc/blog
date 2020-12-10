@@ -2,9 +2,7 @@ import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 import { IBlogs, IBlogTags } from '../../utils/types';
 import { Link } from 'react-router-dom';
-import TagSelector from '../../components/common/TagSelector';
-
-
+import TagSelector from '../selectors/TagSelector';
 
 const SingleBlogCard = (props: IBlogs) => {
     const { title, content, updated_at, id, AuthorName, AuthorEmail } = props;
@@ -17,23 +15,22 @@ const SingleBlogCard = (props: IBlogs) => {
     useEffect(() => {
         (async () => {
             try {
-                //@ts-ignore
                 const res = await fetch(`/api/blogtags/${id}`);
                 let tags = await res.json();
                 // Returning just the data I want without the SQL response since this calls a stored procedure
-                tags = tags[0].map((tag: IBlogTags) => tag.name.replace(' ', '-'));
+                tags = tags[0].map((tag: IBlogTags) => tag.name);
                 updateMyTags(tags);
             } catch (error) {
                 console.log(error);
             }
         })();
-    }, []);
+    }, [id]);
 
 
     if (!blogtags) {
         return (
             <div className="card text-white bg-light m-3 shadow-lg">
-                <div className="card-header text-dark bg-warning">Loading SingleCard...</div>
+                <div className="card-header text-dark bg-warning">Loading blog post...</div>
             </div>
         );
     }
@@ -45,6 +42,7 @@ const SingleBlogCard = (props: IBlogs) => {
                 <p className="text-dark"><em>{content}</em></p>
             </div>
             <div className="card-footer bg-primary">                
+                {/* Since I want this card to be readonly when it's not being edited, the event handler does nothing in this component*/}
                 <TagSelector disabled={true} id={id} onSelectChange={handleSelectedTagsUpdate} />
                 <div className="row ml-2">Written by {AuthorName}.</div>
                 <div className="row ml-2"><em>Contact:  {AuthorEmail}</em></div>
@@ -59,3 +57,7 @@ const SingleBlogCard = (props: IBlogs) => {
 
 
 export default SingleBlogCard;
+
+
+
+

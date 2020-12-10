@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { IBlogs } from '../../utils/types';
-import BlogCard from '../../components/blogs/BlogCard';
+import BlogCard from '../../components/blogcards/BlogCard';
 import { v4 as uuidv4 } from 'uuid';
 
-const AllBlogs = (props: AllBlogsProps) => {
+const AllBlogs = () => {
     const [blogs, updateBlogs] = useState<IBlogs[]>([]);
 
     useEffect(() => {
@@ -26,10 +26,5 @@ const AllBlogs = (props: AllBlogsProps) => {
         </div>
     );
 };
-
-interface AllBlogsProps {
-
-};
-
 
 export default AllBlogs;

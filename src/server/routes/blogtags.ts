@@ -15,6 +15,7 @@ router.get('/:id?', async (req, res, next) => {
 router.post('/', async (req, res, next) => {
     try {
         const blogtags_array = req.body.blogtags_array;
+        console.log(blogtags_array);
         const blogtags = await DB.BlogTags.do.create_new(blogtags_array);
         res.status(200).send(blogtags);
     } catch (e) {
@@ -23,10 +24,7 @@ router.post('/', async (req, res, next) => {
 });
 
 
-// Creating what should be a PUT as a POST - MySQL will reinsert everything into that table,
-// overwriting data field as the second part of the composite key when given the same value for the first.
-// ONLY drawback is that if there is an autoincrement counter, this POST will increase it.
-// Given that we don't even have that on this table, I'm just cheezing it with a POST instead.
+// Creating what should be a PUT as a POST so I can do all updates in a single insertion (after deleting first)
 router.post('/update/:id?', async (req, res, next) => {
     try {
         const id = req.params?.id;

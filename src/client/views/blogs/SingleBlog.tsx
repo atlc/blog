@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import SingleBlogCard from '../../components/blogs/SingleBlogCard';
+import SingleBlogCard from '../../components/blogcards/SingleBlogCard';
 import { v4 as uuidv4 } from 'uuid';
 
 const SingleBlog = () => {

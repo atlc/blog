@@ -10,6 +10,7 @@ router.get('/:id?/edit', async (req, res, next) => {
         res.status(200).json(blog_with_author);
     } catch (e) {
         console.log(e);
+        res.status(500).send(`A server error has occurred. Please check the server logs for more info. ${e}`);
     }
 });
 
@@ -21,7 +22,7 @@ router.get('/:id?', async (req, res, next) => {
         res.status(200).json(blogs);
     } catch (e) {
         console.log(e);
-        res.status(500).send('A server error has occurred. Please check the server logs for more info.');
+        res.status(500).send(`A server error has occurred. Please check the server logs for more info. ${e}`);
     }
 });
 
@@ -30,12 +31,12 @@ router.post('/', async (req, res, next) => {
         const body = req.body;
         const title = body.title;
         const content = body.content;
-        const authorid = body.authorid;  // Fake it 'til you make it, at least until Auth time
+        const authorid = body.authorid;
         const newBlog = await DB.Blogs.do.create_new(title, content, authorid);
         res.status(200).json(newBlog);
     } catch (e) {
         console.log(e);
-        res.status(500).send('A server error has occurred. Please check the server logs for more info.');
+        res.status(500).send(`A server error has occurred. Please check the server logs for more info. ${e}`);
     }
 });
 
@@ -49,7 +50,7 @@ router.put('/', async (req, res, next) => {
         res.status(200).json(blogUpdate);
     } catch (e) {
         console.log(e);
-        res.status(500).send('A server error has occurred. Please check the server logs for more info.');
+        res.status(500).send(`A server error has occurred. Please check the server logs for more info. ${e}`);
     }
 });
 
@@ -60,7 +61,7 @@ router.delete('/:id', async (req, res, next) => {
         res.status(200).json(deletedBlog);
     } catch (e) {
         console.log(e);
-        res.status(500).send('A server error has occurred. Please check the server logs for more info.');
+        res.status(500).send(`A server error has occurred. Please check the server logs for more info. ${e}`);
     }
 });
 

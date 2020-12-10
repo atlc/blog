@@ -1,8 +1,8 @@
-import React, { forwardRef, useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/scss/main.scss';
-import AuthorSelector from '../../components/common/AuthorSelector';
-import TagSelector from '../../components/common/TagSelector';
+import AuthorSelector from '../../components/selectors/AuthorSelector';
+import TagSelector from '../../components/selectors/TagSelector';
 
 
 const CreateBlog = () => {
@@ -11,14 +11,23 @@ const CreateBlog = () => {
     const [blogAuthor, updateBlogAuthor] = useState(null);
     const [blogTags, updateBlogTags] = useState(null);
 
+    // onChange event in the textarea fires this, updating the state of blogText
     const handleBlogTextUpdate = (event: React.ChangeEvent<HTMLTextAreaElement>) => updateBlogText(event.target.value);
+    
+    // onChange event in the input field fires this, updating the state of blogTitle
     const handleBlogTitleUpdate = (event: React.ChangeEvent<HTMLInputElement>) => updateBlogTitle(event.target.value);
+    
+    // Whenever the AuthorSelector child component passes its state back up, triggers the update of blogAuthor
     const handleSelectedAuthorUpdate = (authorFromChild: any) => updateBlogAuthor(authorFromChild);
+    
+    // Whenever the TagSelector child component passes its state back up, this triggers the update of blogTags
     const handleSelectedTagsUpdate = (tagsFromChild: any) => updateBlogTags(tagsFromChild);
 
-    const createBulkFriendlyBlogTagsSQL = (blogID: string) => blogTags.map((t: any) => t.value).map((tagid: string) => [`${blogID}`, tagid]);
+    // Quick and easy way of grabbing the values from `tags` that I need, and creating an array of arrays for bulk-insertion so my POST only runs one statement
+    const createBulkFriendlyBlogTagsSQL = (blogID: string) => blogTags.map((tag: any) => [`${blogID}`, tag.value])
 
     const createBlog = async () => {
+        // Inserts the info into the blog itself
         const blogsOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -30,9 +39,10 @@ const CreateBlog = () => {
         };
         const res = await fetch('/api/blogs', blogsOptions);
         const blogPost = await res.json()
-        const blogID = blogPost.insertId;
+        const blogID = await blogPost.insertId;
         const blogPostStatus = res.status;
 
+        // Inserts the info into the blogtags table
         const blogTagsOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -40,33 +50,29 @@ const CreateBlog = () => {
                 blogtags_array: createBulkFriendlyBlogTagsSQL(blogID)
             })
         };
-        const bt = await fetch('/api/blogtags/update', blogTagsOptions);
+
+        const bt = await fetch('/api/blogtags', blogTagsOptions);
         const blogTagsPostStatus = bt.status;
 
+        // If both the POST requests return a status of 200, return a successful toast
+        // Otherwise pop up an error toast
         notify(blogPostStatus, blogTagsPostStatus);
     }
 
     const notify = (resStatus: number, resStatus2: number) => {
+        const toastOptions = {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+        };
+
         if (resStatus === 200 && resStatus2 === 200) {
-            toast.success('😎 Blog post was created!', {
-                position: toast.POSITION.TOP_RIGHT,
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-            });
+            toast.success('😎 Blog post was created!', {...toastOptions, progress: undefined});
         } else {
-            toast.error('😞 Could not create blog, please check server logs for further details.', {
-                position: toast.POSITION.TOP_RIGHT,
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-            });
+            toast.error('😞 Could not create blog, please check server logs for further details.', {...toastOptions, progress: undefined});
         }
     }
 

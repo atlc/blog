@@ -5,8 +5,8 @@ import Authors from './queries/authors';
 import Tags from './queries/tags';
 import BlogTags from './queries/blogtags';
 
-
-const pool = mysql.createPool(config.mysql);
+// Some 300 IQ db config/setup from Luke
+const pool = mysql.createPool(config.mysql); 
 
 export const Query = <T = any>(query: any, values?: any) => {
     return new Promise<T>((resolve, reject) => {

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { IBlogs } from '../../utils/types';
-import EditableBlogCard from '../../components/blogs/EditableBlogCard';
+import EditableBlogCard from '../../components/blogcards/EditableBlogCard';
 import { v4 as uuidv4 } from 'uuid';
 
 const EditableBlog = (props: EditableBlogProps) => {

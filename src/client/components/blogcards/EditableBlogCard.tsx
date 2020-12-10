@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { IBlogs } from '../../utils/types';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/scss/main.scss';
-import TagSelector from '../../components/common/TagSelector';
+import TagSelector from '../selectors/TagSelector';
 
 const EditableBlogCard = (props: IBlogs) => {
     const { title, content, id } = props;
@@ -10,7 +10,8 @@ const EditableBlogCard = (props: IBlogs) => {
     const [blogTags, updateBlogTags] = useState(null);
 
     const handleBlogtextUpdate = (e: React.ChangeEvent<HTMLTextAreaElement>) => updateBlogText(e.target.value);
-    const handleSelectedTagsUpdate = (tagsFromChild: any) => updateBlogTags(tagsFromChild);
+    const handleSelectedTagsUpdate = (tagsFromChild: any) => updateBlogTags(tagsFromChild); // Grabs the state from the child TagSelector component
+    // EZ-PZ way of grabbing the tag values that I want, and creating an array of arrays for bulk-insertion in my SQL statement
     const createBulkFriendlyBlogTagsSQL = (blogID: string) => blogTags.map((t: any) => t.value).map((tagid: string) => [`${blogID}`, tagid]);
 
     const updateBlog = async () => {
@@ -27,16 +28,12 @@ const EditableBlogCard = (props: IBlogs) => {
             .then(res => res.status)
             .then(put_results => {
                 notify(put_results, "Blog was", "updated");
-                setTimeout(() => {
-                    window.history.go(-2);
-                }, 3000)
             })
 
 
-        // Running what should be a PUT as a POST - MySQL will reinsert everything into that table,
-        // overwriting data field as the second part of the composite key when given the same value for the first.
-        // ONLY drawback is that if there is an autoincrement counter, this POST will increase it.
-        // Given that we don't even have that on this table, I'm just cheezing it with a POST instead.
+        // Running what should be a PUT as a POST - Instead of having to run multiple PUT queries when multiple tags are selected,
+        // when a POST is received at this endpoint it will delete all the BlogTags at that blogid, then run a POST where all the
+        // values are bulk-inserted in a single query.
         const blogTagsOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -45,8 +42,8 @@ const EditableBlogCard = (props: IBlogs) => {
             })
         };
         const bt = await fetch(`/api/blogtags/update/${id}`, blogTagsOptions);
-        // const btson = await bt.json();
-        // console.log(btson);
+        const btjson = await bt.json();
+        // console.log(btjson);
     }
 
     const deleteBlog = () => {
@@ -55,40 +52,30 @@ const EditableBlogCard = (props: IBlogs) => {
             headers: { 'Content-Type': 'application/json' },
         };
 
-        // Synchronous-asynchronous code to deal with database deletions. Ugh 
+        // Synchronous-async code to deal with synchronous database deletions. Ugh 
         fetch(`/api/blogtags/${id}`, reqOptions)
             .then(() => {
                 fetch(`/api/blogs/${id}`, reqOptions)
                     .then(blogRes => {
                         notify(blogRes.status, "Blog was", "deleted");
-                        setTimeout(() => {
-                            window.history.go(-2);
-                        }, 3000)
                     })
             })
     }
 
     const notify = (stat: number, item: string, requestVerb: string) => {
+        const toastOptions = {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+        };
+
         if (stat === 200) {
-            toast.success(`😎 ${item} ${requestVerb}!`, {
-                position: toast.POSITION.TOP_RIGHT,
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-            });
+            toast.success(`😎 ${item} ${requestVerb}!`, { ...toastOptions, progress: undefined });
         } else {
-            toast.error(`😞 ${item} not ${requestVerb}, please check server logs for further details.`, {
-                position: toast.POSITION.TOP_RIGHT,
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-            });
+            toast.error(`😞 ${item} not ${requestVerb}, please check server logs for further details.`, { ...toastOptions, progress: undefined });
         }
     }
 

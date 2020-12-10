@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Navbar from './components/nav/Navbar';
 import { Home } from './views/Home';
 import AllBlogs from './views/blogs/AllBlogs';

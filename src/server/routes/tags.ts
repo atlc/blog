@@ -8,7 +8,7 @@ router.get('/', async (req, res, next) => {
         res.status(200).json(tags);
     } catch (e) {
         console.log(e);
-        res.status(500).send('A server error has occurred. Please check the server logs for more info.');
+        res.status(500).send(`A server error has occurred. Please check the server logs for more info. ${e}`);
     }
 });
 
